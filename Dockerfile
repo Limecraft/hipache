@@ -7,16 +7,18 @@
 # docker run -d <imageid>
 # redis-cli
 #
-# VERSION		0.2
-# DOCKER-VERSION	0.4.0
+# VERSION		0.2w
+# DOCKER-VERSION	0.7.1
 
-from	ubuntu:12.04
+from	docker.limecraft.com:5000/nodejs
+
 run	echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
 run	apt-get -y update
-run	apt-get -y install wget git redis-server supervisor
-run	wget -O - http://nodejs.org/dist/v0.8.26/node-v0.8.26-linux-x64.tar.gz | tar -C /usr/local/ --strip-components=1 -zxv
-run	npm install hipache -g
+run	apt-get -y install redis-server supervisor
 run	mkdir -p /var/log/supervisor
+
+add     . /opt/ 
+run     cd /opt/ ; npm install && npm link
 add	./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 add	./config/config_dev.json /usr/local/lib/node_modules/hipache/config/config_dev.json
 add	./config/config_test.json /usr/local/lib/node_modules/hipache/config/config_test.json
